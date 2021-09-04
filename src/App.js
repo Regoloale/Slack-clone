@@ -7,19 +7,31 @@ import {
   Route,
   Link
 } from "react-router-dom";
+import styled from "styled-components";
+import Sidebar from "./components/Sidebar";
 
 function App() {
   return (
     <Router>
       <>
+      <Header />
+      <AppBody>
+      <Sidebar />
         <Switch>
           <Route path="/" exact>
-            <Header />
+           {/* Chat */} 
           </Route>
         </Switch>
+      </AppBody>
+        
       </>
     </Router>
   );
 }
 
 export default App;
+
+const AppBody = styled.div`
+  display: flex;
+  height: 100vh;
+`;
