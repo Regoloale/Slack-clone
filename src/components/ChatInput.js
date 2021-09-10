@@ -1,26 +1,32 @@
 import React, { useRef, useState } from 'react';
 import styled from 'styled-components';
 import Button from '@material-ui/core/Button';
-import { db } from '../firebase';
+import { auth, db } from '../firebase';
 import firebase from 'firebase';
+import { useAuthState } from 'react-firebase-hooks/auth';
 
-function ChatInput({channelName, channelId}) {
+function ChatInput({channelName, channelId, chatRef}) {
     const [input, setInput] = useState("");
+    const [user] = useAuthState(auth);
 
     const sendMessage = e => {
         
         e.preventDefault(); //Prevent refresh of page when we click send
 
-        if (channelId) { 
+        if (!channelId) { 
             return false;
         }
 
         db.collection('rooms').doc(channelId).collection("messages").add({
             message: input,
             timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-            user: 'Ale Regolo',
-            userImage: 'https://i.stack.imgur.com/ILTQq.png'
+            user: user.displayName ,
+            userImage: user.photoURL
         });
+
+        chatRef.current.scrollIntoView({
+            behavior: "smooth"
+        })
 
         setInput('');
     }
@@ -29,8 +35,8 @@ function ChatInput({channelName, channelId}) {
         <ChatInputContainer>
             <form>
                 <input 
-                    value={input}
-                    placeholder={`Message #ROOM`} 
+                    value={input}  
+                    placeholder={`Message #${channelName}`} 
                     onChange={e => setInput(e.target.value)}
                 />
                 <Button hidden type='submit' onClick={sendMessage} >
