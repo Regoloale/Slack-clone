@@ -84,7 +84,6 @@ const AppLoadingContents = styled.div`
     height: 100px;
     padding: 20px;
     margin-bottom: 40px;
-    
   }
 `;
 
